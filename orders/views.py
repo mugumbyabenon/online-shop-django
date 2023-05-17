@@ -6,39 +6,55 @@ from django.utils import timezone
 
 from .models import Order, OrderItem
 from cart.utils.cart import Cart
-
+from shop.models import Product
 
 @login_required
 def create_order(request):
     cart = Cart(request)
-    order = Order.objects.create(user=request.user)
+    order = Order.objects.create(user=request.user,status=True)
     for item in cart:
+        n = int(item['price']) * int(item['quantity'])
         OrderItem.objects.create(
             order=order, product=item['product'],
-            price=item['price'], quantity=item['quantity']
+            price=item['price'], quantity=item['quantity'],totalprice=n
     )
-    return redirect('orders:pay_order', order_id=order.id)
+    for n in Product.objects.all():
+        product = get_object_or_404(Product, id=n.id)
+        cart.remove(product)
+    return redirect('orders:checkout', order_id=order.id)
 
 
 @login_required
 def checkout(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    context = {'title':'Checkout' ,'order':order}
+    context = {'title':'Checkout' ,'order':order,'id':order_id}
     return render(request, 'checkout.html', context)
 
 
 @login_required
 def fake_payment(request, order_id):
-    cart = Cart(request)
-    cart.clear()
-    order = get_object_or_404(Order, id=order_id)
-    order.status = True
-    order.save()
-    return redirect('orders:user_orders')
+    if request.method == 'POST':
+        OrderItem.objects.filter(id=order_id).update(status='Pending delivery', payment=False)
+        return redirect('orders:user_orders')
+    return render(request,'payments.html')
 
+@login_required
+def CancelOrder(request, order_id,Orderitem_id):
+    staus = set()
+    OrderItem.objects.filter(id=Orderitem_id).update(status='Order cancelled', payment=False)
+    for k in Order.objects.filter(id=order_id).all():
+        for n in OrderItem.objects.filter(order=k.id):
+            staus.add(n.status)
+    if len(staus)==1:
+        for value in staus:
+            if value == 'Order cancelled':
+              Order.objects.filter(id=order_id).update(status=False)
+
+    return redirect('/orders/list')
 
 @login_required
 def user_orders(request):
     orders = request.user.orders.all()
-    context = {'title':'Orders', 'orders': orders}
+    payment = OrderItem.objects.all()
+    context = {'title':'Orders', 'orders': orders,'payment':payment}
     return render(request, 'user_orders.html', context)

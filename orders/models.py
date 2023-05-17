@@ -10,6 +10,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
 
+
     class Meta:
         ordering = ('-created',)
 
@@ -26,7 +27,10 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items')
     price = models.IntegerField()
+    totalprice = models.IntegerField(default=0)
     quantity = models.SmallIntegerField(default=1)
+    status = models.CharField(default='Pending Payment',max_length=30)
+    payment = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.id)

@@ -10,25 +10,17 @@ from orders.models import Order, OrderItem
 from .forms import AddProductForm, AddCategoryForm, EditProductForm
 
 
-def is_manager(user):
-    try:
-        if not user.is_manager:
-            raise Http404
-        return True
-    except:
-        raise Http404
 
 
-@user_passes_test(is_manager)
-@login_required
+
+@user_passes_test(lambda u: u.is_admin)
 def products(request):
     products = Product.objects.all()
     context = {'title':'Products' ,'products':products}
     return render(request, 'products.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@user_passes_test(lambda u: u.is_admin)
 def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
@@ -42,16 +34,14 @@ def add_product(request):
     return render(request, 'add_product.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@user_passes_test(lambda u: u.is_admin)
 def delete_product(request, id):
     product = Product.objects.filter(id=id).delete()
     messages.success(request, 'product has been deleted!', 'success')
     return redirect('dashboard:products')
 
 
-@user_passes_test(is_manager)
-@login_required
+@user_passes_test(lambda u: u.is_admin)
 def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
@@ -66,8 +56,7 @@ def edit_product(request, id):
     return render(request, 'edit_product.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@user_passes_test(lambda u: u.is_admin)
 def add_category(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST)
@@ -81,18 +70,21 @@ def add_category(request):
     return render(request, 'add_category.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@user_passes_test(lambda u: u.is_admin)
 def orders(request):
-    orders = Order.objects.all()
+    orders = OrderItem.objects.filter(status='Pending delivery').all()
     context = {'title':'Orders', 'orders':orders}
     return render(request, 'orders.html', context)
 
+@user_passes_test(lambda u: u.is_admin)
+def ConfirmOrders(request,id):
+    OrderItem.objects.filter(id=id).update(status ='Delivered')
+    return redirect('/dashboard/orders')
 
-@user_passes_test(is_manager)
-@login_required
+
+@user_passes_test(lambda u: u.is_admin)
 def order_detail(request, id):
     order = Order.objects.filter(id=id).first()
-    items = OrderItem.objects.filter(order=order).all()
+    items = OrderItem.objects.filter(order=id).all()
     context = {'title':'order detail', 'items':items, 'order':order}
     return render(request, 'order_detail.html', context)

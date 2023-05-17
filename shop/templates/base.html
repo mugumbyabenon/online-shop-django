@@ -14,21 +14,20 @@
 <body>
   <header class="p-2 border-bottom">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" >
         <!-- cart icon -->
         {% if request.user.is_authenticated %}
         <b class="text-primary">{{ cart_count }}</b>
         {% endif %}
-        <a href="{% url 'cart:show_cart' %}" class="text-primary mt-2 me-2"><i class="material-icons h3">&#xe8cc;</i></a>
+        <a href="{% url 'cart:show_cart' %}" class="text-primary mt-2 me-2"><i class="material-icons h3" style="color:#C41E3A;">&#xe8cc;</i></a>
         <!-- favorite icon -->
         {% if request.user.is_authenticated %}
         <b class="text-primary">{{ request.user.get_likes_count}}</b>
         {% endif %}
-        <a href="{% url 'shop:favorites' %}" class="text-primary mt-2 me-2"><i class="material-icons h3">&#xe87d;</i></a>
+        <a href="{% url 'shop:favorites' %}" class="text-primary mt-2 me-2"><i class="material-icons h3" style="color:#C41E3A;">&#xe87d;</i></a>
         <!-- Menu -->
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'shop:home_page' %}" class="nav-link px-2 text-dark">Home</a></li>
-          <li><a href="#" class="nav-link px-2 text-dark">Shop</a></li>
           <!-- categories dropdown -->
           <div class="dropdown text-end">
             <a href="#" class=" mt-2 me-1 ms-1 text-dark d-block link-dark text-decoration-none dropdown-toggle"id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
@@ -55,12 +54,12 @@
         </form>
         {% if request.user.is_authenticated %}
         <!-- user profile dropdown -->
-        <div class="dropdown text-end">
-          <a href="#" class="btn btn-primary text-white me-4 d-block link-dark text-decoration-none dropdown-toggle"id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
+        <div class="dropdown text-end" >
+          <a href="#" class="btn btn-primary text-white me-4 d-block link-dark text-decoration-none dropdown-toggle"id="dropdownUser1" data-bs-toggle="dropdown" style="background-color:#C41E3A;border:black;outline-color:black;" aria-expanded="false">Profile</a>
           <ul class="dropdown-menu" aria-labelledby="dropdownUser1">
             <li><a href="{% url 'cart:show_cart' %}" <a class="dropdown-item">Cart</a></li>
             <li><a href="{% url 'shop:favorites' %}" <a class="dropdown-item">Favorites</a></li>
-            <li><a href="{% url 'orders:user_orders' %}" <a class="dropdown-item">Orders</a></li>
+            <li><a href="{% url 'orders:user_orders' %}" <a class="dropdown-item">Track Orders</a></li>
             <li><a class="dropdown-item" href="{% url 'accounts:edit_profile' %}">Edit Profile</a></li>
             <li><a class="dropdown-item text-danger" href="{% url 'accounts:user_logout' %}">Sign out</a></li>
           </ul>
@@ -68,8 +67,8 @@
         {% else %}
         <!-- login, sign-up btn -->
         <div class="text-end">
-          <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary me-2">Login</a>
-          <a href="{% url 'accounts:user_register' %}" class="btn btn-primary">Sign-up</a>
+          <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary me-2" style="background-color:#C41E3A; color:white;border:black;">Login</a>
+          <a href="{% url 'accounts:user_register' %}" class="btn btn-primary" style="background-color:white; color:black;border:#C41E3A;outline-color:#C41E3A;active:{background-color:#C41E3A;};">Sign-up</a>
         </div>
         {% endif %}
       </div>

@@ -17,11 +17,24 @@
 {% for item in order.items.all  %}
     <div class="border-bottom p-2">
         <p>product: <a class="text-decoration-none" href="{{ item.product.get_absolute_url }}">{{item.product.title}}</a></p>
-        <p>Price: ${{item.price}}</p>
+        <p>Price: Shs. {{item.price}}</p>
         <p>quantity: {{item.quantity}}</p>
+        <p>Order Status: <a style="color:red;">{{item.status}}</a></p>
+         <b>Total price: Shs. {{ item.get_cost }}</b>
+        {% if item.status == 'Pending Payment' or  item.status == 'Pending delivery' %}
+         <a href="/orders/cancelorder/{{ order.id }}/{{ item.id }}" class="btn btn-danger">Cancel Order</a>
+
+         {% endif %}
+        {% if item.payment %}
+    <p><b>Do you want to continue and pay?</b></p>
+
+    <p><a href="/orders/fake-payment/{{ item.id }}" class="btn btn-outline-success">Continue and pay</a></p>
+
+        {% endif %}
     </div>
 {% endfor %}
-<b>Total price: ${{ order.get_total_price }}</b>
+    <b>Total Order bill  price: Shs. {{ order.get_total_price }}</b>
+
 </div>
 {% endfor %}
 {% else %}

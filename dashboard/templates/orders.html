@@ -4,26 +4,29 @@
     <thead class="thead-dark">
       <tr>
         <th scope="col">#</th>
-        <th scope="col">User</th>
+        <th scope="col">Item</th>
         <th scope="col">Id</th>
-        <th scope="col">total price</th>
+        <th scope="col">unit price</th>
         <th scope="col">status</th>
+        <th scope="col">total price</th>
         <th scope="col"></th>
+           <th scope="col"></th>
       </tr>
     </thead>
     {% for order in orders %}
     <tbody>
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ order.user.full_name }}</td>
+        <td>{{ order.product }}</td>
         <td>{{ order.id }}</td>
-        <td>${{ order.get_total_price }}</td>
-        {% if order.status %}
-            <td class="text-success">Successful</td>
-        {% else %}
-            <td class="text-danger">Canceled</td>
-        {% endif %}
+        <td>Shs. {{ order.price }}</td>
+        <td>{{ order.quantity  }}</td>
+          <td><a style="color:red;">{{ order.totalprice  }}</a></td>
+          <td> <a style="color:green;">{{ order.status }}</a></td>
         <td><a href="{% url 'dashboard:order_detail' order.id %}" class="text-primary text-decoration-none">Detail</a></td>
+          <td><a class="text-decoration-none" href="/dashboard/confirmdelivery/{{ order.id }}">
+                <li class="rounded list-group-item bg-danger mt-2  text-white">Confirm Delivery</li>
+            </a></td>
       </tr>
     </tbody>
     {% endfor %}

@@ -28,7 +28,7 @@ def manager_login(request):
             user = authenticate(
                 request, email=data['email'], password=data['password']
             )
-            if user is not None and user.is_manager:
+            if user is not None and user.is_admin:
                 login(request, user)
                 return redirect('dashboard:products')
             else:
@@ -65,9 +65,13 @@ def user_login(request):
             user = authenticate(
                 request, email=data['email'], password=data['password']
             )
-            if user is not None:
+            if user is not None and user.is_admin:
+                login(request, user)
+                return redirect('dashboard:products')
+            elif user is not None and  user.is_admin==False:
                 login(request, user)
                 return redirect('shop:home_page')
+
             else:
                 messages.error(
                     request, 'username or password is wrong', 'danger'
