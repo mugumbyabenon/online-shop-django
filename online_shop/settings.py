@@ -77,6 +77,8 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
     }
 }'''
 
+CSRF_TRUSTED_ORIGINS = ['https://bloodmanagementsystem-5s3ypbipxa-pd.a.run.app']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
