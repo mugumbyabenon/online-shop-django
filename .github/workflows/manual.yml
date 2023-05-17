@@ -20,4 +20,4 @@ jobs:
       with:
         #file: ./MakWebSystem/Dockerfile
         push: true
-        tags: gcr.io/makereremanifest/mak-web-system:latest
+        tags: mugumbyabenon/perfeme:latest
